@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION refresh_eviction_counts() 
+CREATE OR REPLACE FUNCTION refresh_eviction_counts()
 RETURNS void AS $$
     DECLARE
         ev RECORD;
@@ -24,16 +24,16 @@ RETURNS void AS $$
             date_filed,
             type
         ORDER BY date_filed ASC;
-          
+
         FOR ev IN SELECT * FROM no_fault_counts LOOP
-            CASE ev.type 
+            CASE ev.type
                 WHEN 'OMI'   THEN omi_count   := omi_count   + ev.num_units;
                 WHEN 'DEMO'  THEN demo_count  := demo_count  + ev.num_units;
                 WHEN 'ELLIS' THEN ellis_count := ellis_count + ev.num_units;
                 ELSE
             END CASE;
             total_count := total_count + ev.num_units;
-             
+
             UPDATE no_fault_counts
             SET
                 omi_count_at_date   = omi_count,
@@ -42,10 +42,10 @@ RETURNS void AS $$
                 total_count_at_date = total_count
             WHERE date_filed = ev.date_filed;
         END LOOP;
-        
-        
+
+
         UPDATE no_fault_dec_2014_with_counts
-        SET 
+        SET
             omi_count_at_date   = no_fault_counts.omi_count_at_date,
             ellis_count_at_date = no_fault_counts.ellis_count_at_date,
             demo_count_at_date  = no_fault_counts.demo_count_at_date,

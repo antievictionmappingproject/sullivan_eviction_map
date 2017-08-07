@@ -19,7 +19,7 @@ $( document ).ready(function() {
   .addLayer(new L.TileLayer("http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png"));
 
   /* Initialize the SVG layer */
-  map._initPathRoot()    
+  map._initPathRoot()
 
   /* Pass map SVG layer to d3 */
   var svg = d3.select("#map").select("svg"),
@@ -32,7 +32,7 @@ $( document ).ready(function() {
   var timer;
   var isPlaying = false;
   var counterTime = startingTime;
-  
+
   /*Load data file from cartoDB and initialize coordinates*/
   var sql = new cartodb.SQL({ user: 'ampitup', format: 'geojson'});
   sql.execute("SELECT the_geom, date_filed, address_1, units, type, demo_count_at_date, ellis_count_at_date, omi_count_at_date, total_count_at_date FROM no_faults_2016 WHERE date_filed IS NOT NULL ORDER BY date_filed ASC", {table_name: 'no_faults_2016'})
@@ -49,7 +49,7 @@ $( document ).ready(function() {
         var feature = node.append("circle")
         .attr("r", function(d) { return 1+d.properties.units;})
         .attr("class",  "center")
-        .style("stroke", function(d) { 
+        .style("stroke", function(d) {
          if(d.properties.type == "OMI"){
           return "#606";} else if(d.properties.type == "DEMO"){
             return "#066";
@@ -105,7 +105,7 @@ $( document ).ready(function() {
         /*Filter map points by date*/
         function filterCurrentPoints(){
          var filtered = node.attr("visibility", "hidden")
-         .filter(function(d) { return Date.parse(d.properties.date_filed) < counterTime}) 
+         .filter(function(d) { return Date.parse(d.properties.date_filed) < counterTime})
          .attr("visibility", "visible");
          updateCounter(filtered[0].length-1);
        }
@@ -128,14 +128,14 @@ $( document ).ready(function() {
         counterTime = $( "#slider" ).slider( "value" );
         if(counterTime >=maxTime){
           $( "#slider" ).slider( "value", startingTime);
-          
+
         }
         isPlaying = true;
         timer = setInterval(function() {
-         counterTime += step; 
+         counterTime += step;
          $( "#slider" ).slider( "value", counterTime);
          if(counterTime >=maxTime){
-          stopAnimation(); 
+          stopAnimation();
         }
       },500);
 
